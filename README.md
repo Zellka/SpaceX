@@ -19,6 +19,3 @@
 
 
 ![](https://github.com/Zellka/SpaceX/blob/master/app.png)
-
-# Author: 
-Ilona Zelinskaya
