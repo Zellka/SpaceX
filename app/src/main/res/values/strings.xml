@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SpaceX</string>
+    <string name="label_launches">Launches</string>
+    <string name="label_detail">Detail</string>
+    <string name="status_done">Done</string>
+    <string name="status_process">Process</string>
+</resources>
