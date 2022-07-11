@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ import com.example.spacex.databinding.FragmentDetailBinding
 import com.example.launch.domain.models.Launch
 import com.example.spacex.app.App
 import com.example.spacex.presentation.adapter.CrewAdapter
+import com.example.spacex.presentation.utils.NetworkUtil
 import com.example.spacex.presentation.viewmodel.LaunchesViewModel
 import com.example.spacex.presentation.viewmodel.ViewModelFactory
 import java.text.SimpleDateFormat
@@ -54,7 +56,11 @@ class DetailFragment : Fragment() {
         setupViewModel()
         setupRecyclerView()
         binding.progress.visibility = View.VISIBLE
-        getCrew()
+        if (NetworkUtil.checkInternet(this.requireActivity())) {
+            getCrew()
+        } else {
+            Toast.makeText(this.requireContext(), "Отсутствует интернет", Toast.LENGTH_SHORT).show()
+        }
         setupUI()
     }
 

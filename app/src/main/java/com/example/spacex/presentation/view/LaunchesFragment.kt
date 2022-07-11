@@ -20,6 +20,7 @@ import com.example.spacex.databinding.FragmentLaunchesBinding
 import com.example.launch.domain.models.Launch
 import com.example.spacex.app.App
 import com.example.spacex.presentation.adapter.LaunchesAdapter
+import com.example.spacex.presentation.utils.NetworkUtil
 import com.example.spacex.presentation.viewmodel.LaunchesViewModel
 import com.example.spacex.presentation.viewmodel.ViewModelFactory
 import javax.inject.Inject
@@ -56,7 +57,7 @@ class LaunchesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         binding.progress.visibility = View.VISIBLE
-        if (checkInternet(this.requireActivity())) {
+        if (NetworkUtil.checkInternet(this.requireActivity())) {
             getLaunches()
         } else {
             Toast.makeText(this.requireContext(), "Отсутствует интернет", Toast.LENGTH_SHORT).show()
@@ -84,25 +85,5 @@ class LaunchesFragment : Fragment() {
             R.id.action_launchesFragment_to_detailFragment,
             bundle
         )
-    }
-
-    private fun checkInternet(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val network = connectivityManager.activeNetwork ?: return false
-            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
-
-            return when {
-                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-                else -> false
-            }
-        } else {
-            @Suppress("DEPRECATION") val networkInfo =
-                connectivityManager.activeNetworkInfo ?: return false
-            @Suppress("DEPRECATION")
-            return networkInfo.isConnected
-        }
     }
 }
