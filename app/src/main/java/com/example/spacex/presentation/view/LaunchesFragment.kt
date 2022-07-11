@@ -1,10 +1,15 @@
 package com.example.spacex.presentation.view
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -51,7 +56,11 @@ class LaunchesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         binding.progress.visibility = View.VISIBLE
-        getLaunches()
+        if (checkInternet(this.requireActivity())) {
+            getLaunches()
+        } else {
+            Toast.makeText(this.requireContext(), "Отсутствует интернет", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setupUI() {
@@ -75,5 +84,25 @@ class LaunchesFragment : Fragment() {
             R.id.action_launchesFragment_to_detailFragment,
             bundle
         )
+    }
+
+    private fun checkInternet(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
+
+            return when {
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                else -> false
+            }
+        } else {
+            @Suppress("DEPRECATION") val networkInfo =
+                connectivityManager.activeNetworkInfo ?: return false
+            @Suppress("DEPRECATION")
+            return networkInfo.isConnected
+        }
     }
 }
