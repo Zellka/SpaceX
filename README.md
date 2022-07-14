@@ -11,7 +11,6 @@
 - [X] Kotlin Coroutines + Flow
 - [X] Dagger 2
 - [X] Coil
-- [X] Проверка подключения к интернету
 
 
 ![](https://github.com/Zellka/SpaceX/blob/master/app.png)
